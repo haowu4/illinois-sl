@@ -19,6 +19,9 @@ package edu.illinois.cs.cogcomp.sl.util;
 
 import gnu.trove.map.hash.TIntIntHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -32,8 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Lexiconer implements Serializable {
 
+    static Logger logger = LoggerFactory.getLogger(Lexiconer.class);
 
-	/**
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 3976531365997767401L;
@@ -84,8 +88,7 @@ public class Lexiconer implements Serializable {
 		}
 	}
 	
-	public Lexiconer()
-	{
+	public Lexiconer() {
 		this(false);
 	}
 	/**
@@ -187,7 +190,11 @@ public class Lexiconer implements Serializable {
 	 * @param s
 	 */
 	public synchronized void addFeature(String s) {
-		assert allowNewFeatures == true;
+		if (!allowNewFeatures){
+		    logger.warn(
+			"Adding new feature failed: Lexiconer does not allow adding new feature. ");
+		    return;
+		}
 
 		if (!feaStr2IdMap.containsKey(s)) {
 			int v = feaStr2IdMap.size();
